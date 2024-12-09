@@ -7,7 +7,7 @@
       "RelativeMoniker": "D:0:0:{220A7F59-62B8-44E4-979A-85D68EFA6DE5}|Atualizate\\Atualizate.csproj|solutionrelative:atualizate\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{4DE78F66-670E-43AF-85BD-1494A25AC5D5}|PrintScanner\\CamScan.csproj|c:\\users\\amaur\\onedrive\\documentos\\github\\camscan\\code\\printscanner\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{4DE78F66-670E-43AF-85BD-1494A25AC5D5}|PrintScanner\\CamScan.csproj|C:\\Users\\Amaur\\OneDrive\\Documentos\\GitHub\\CamScan\\code\\printscanner\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{4DE78F66-670E-43AF-85BD-1494A25AC5D5}|PrintScanner\\CamScan.csproj|solutionrelative:printscanner\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
@@ -48,7 +48,7 @@
               "RelativeDocumentMoniker": "Atualizate\\MainWindow.xaml.cs",
               "ToolTip": "C:\\Users\\Amaur\\OneDrive\\Documentos\\GitHub\\CamScan\\code\\Atualizate\\MainWindow.xaml.cs",
               "RelativeToolTip": "Atualizate\\MainWindow.xaml.cs",
-              "ViewState": "AQIAAAIBAAAAAAAAAAAcwBoAAAAfAAAA",
+              "ViewState": "AQIAABIAAAAAAAAAAAAAABoAAAAgAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-12-04T17:13:27.018Z",
               "EditorCaption": ""
@@ -63,8 +63,7 @@
               "RelativeToolTip": "PrintScanner\\MainWindow.xaml.cs",
               "ViewState": "AQIAAA0AAAAAAAAAAAApwCAAAAAQAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-04T16:46:24.485Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-12-04T16:46:24.485Z"
             }
           ]
         },
