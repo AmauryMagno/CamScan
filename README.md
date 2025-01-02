@@ -14,10 +14,10 @@ O projeto conta tambem com uma aplicacao auxiliar para atualizacao automatica
 ## Instruções de utilização
 
 `Para programar`
-- Baixe a pasta code, nela voce encontrara a pasta Atualizate(contem a aplicacao responsavel pela atualizacao automatica da aplicacao principal) e WebCamScanner(contem a aplicacao principal). Atraves do arquivo CamScan.sln tambem encontrado na pasta code voce pode abrir o projeto com os dois subprojetos diretamente no Visual Studio, recomendado para edicao de codigo deste projeto.   
+Baixe a pasta code, nela voce encontrara a pasta Atualizate(contem a aplicacao responsavel pela atualizacao automatica da aplicacao principal) e WebCamScanner(contem a aplicacao principal). Atraves do arquivo CamScan.sln tambem encontrado na pasta code voce pode abrir o projeto com os dois subprojetos diretamente no Visual Studio, recomendado para edicao de codigo deste projeto.   
 
 `Para usufruir`
-- Acesse a pasta app e baixe o arquivo .zip com o projeto completo, que contem o app de atualizacao(Atualizate) inserido no repositorio principal da aplicacao WebCamScanner.
+Acesse a pasta app e baixe o arquivo .zip com o projeto completo, que contem o app de atualizacao(Atualizate) inserido no repositorio principal da aplicacao WebCamScanner.
 
 # Documentação
 
