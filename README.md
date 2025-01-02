@@ -4,8 +4,7 @@
 
 `Inicio - 07/2024`
 
-Este é um projeto .NET Desktop desenvolvido para auxiliar no gerenciamento e no salvamento de pastas pré-configuradas, destinadas aos processos de escaneamento e ao armazenamento de fotografias capturadas via webcam.
-O projeto conta tambem com uma aplicacao auxiliar para atualizacao automatica
+Este é um projeto .NET Desktop desenvolvido para auxiliar no gerenciamento e no salvamento de pastas pré-configuradas, destinadas aos processos de escaneamento e ao armazenamento de fotografias capturadas via webcam. O projeto também conta com uma aplicação auxiliar para atualização automática.
 
 ## Integrante
 
@@ -14,12 +13,15 @@ O projeto conta tambem com uma aplicacao auxiliar para atualizacao automatica
 ## Instruções de utilização
 
 `Para programar` 
-- Baixe a pasta code, nela voce encontrara a pasta Atualizate(contem a aplicacao responsavel pela atualizacao automatica da aplicacao principal) e WebCamScanner(contem a aplicacao principal). Atraves do arquivo CamScan.sln tambem encontrado na pasta code voce pode abrir o projeto com os dois subprojetos diretamente no Visual Studio, recomendado para edicao de codigo deste projeto.   
+
+Baixe a pasta 'code'. Nela, você encontrará a pasta 'Atualizate' (que contém a aplicação responsável pela atualização automática da aplicação principal) e a pasta 'WebCamScanner' (que contém a aplicação principal). Por meio do arquivo 'CamScan.sln', também localizado na pasta 'code', você pode abrir o projeto com os dois subprojetos diretamente no Visual Studio, recomendado para a edição do código deste projeto.
 
 `Para usufruir` 
+
 - Acesse a pasta app e baixe o arquivo .zip com o projeto completo
 - Acesse Atualizate/version/version.json
 - Ajuste o arquivo de acordo com o Readme presente na pasta <a href="code/Atualizate/readme.md">Configuracao da Branch de atualizacao e configuracao do version.json</a>
+- Execute o arquivo .exe para inciar a aplicação(caso não tenha o runtime da aplicação baixado, uma mensagem direcionando a página de download aparecerá)
 
 # Documentação
 
