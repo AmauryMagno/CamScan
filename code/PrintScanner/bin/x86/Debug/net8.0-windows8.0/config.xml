@@ -3,7 +3,7 @@
   <Scanner>
     <ConfigScanner>
       <ConfigDriver>
-        <Name>EPSON355326 (L6170 Series)</Name>
+        <Name>EPSON Perfection V19</Name>
         <Type>WIA</Type>
       </ConfigDriver>
       <FolderDocumentoCliente>C:\Users\Amaur\OneDrive\Documentos\MIB\CamScanTeste\Documentos de Clientes</FolderDocumentoCliente>

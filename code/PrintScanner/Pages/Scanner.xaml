@@ -41,10 +41,9 @@
                     </Grid.RowDefinitions>
                     <Grid Grid.Row="0">
                         <router:Navigator Style="{StaticResource NavigatorImage}"
-               ImageSource="/Images/Settings/backButton.png"
-               NavUri="/Pages/Landing.xaml" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="10,7,0,0" Click="Navigator_Click" 
-               />
-
+                           ImageSource="/Images/Settings/backButton.png"
+                           NavUri="/Pages/Landing.xaml" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="10,7,0,0" Click="Navigator_Click" 
+                        />
                     </Grid>
                     <Grid Grid.Row="1">
                         <Label Content="Qual o tipo de arquivo ?" HorizontalAlignment="Center" 
