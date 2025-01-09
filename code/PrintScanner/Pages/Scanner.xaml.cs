@@ -20,20 +20,14 @@ using CamScan.Services;
 using CamScan.Pages;
 using System.IO;
 using WIA;
-using System.Runtime.CompilerServices;
-using System.Xml;
-using PdfSharp.Drawing;
-using System.Windows.Controls.Primitives;
-using PdfSharp.Charting;
-using System.Reflection;
-using System.Drawing;
-using System.Drawing.Imaging;
-using Microsoft.VisualBasic.ApplicationServices;
 using static PdfSharp.Capabilities.Features;
 using System.Reflection.Metadata;
 using CamScan.Components;
 using Saraff.Twain;
 using System.Security.Cryptography;
+using static System.Net.Mime.MediaTypeNames;
+using System.Diagnostics.Metrics;
+using ServiceStack;
 
 namespace CamScan
 {
@@ -49,18 +43,21 @@ namespace CamScan
         private Twain32 _twain;
 
         private int quantityScanned {  get; set; }
-        private string driverType {  get; set; }
-
         
         private List<string> ScannedImages = new List<string>();
         private readonly XMLConnect xmlConnect = new XMLConnect();
         private int IndexOfListImagesScanned = 0;
         private string? DriverType { get; set; }
+        private string? DriverName { get; set; }
         private string? FolderDocumentoCliente { get; set; }
         private string? FolderConfissaodeDivida { get; set; }
         private string? FolderDespesas { get; set; }
         private string? FolderOutros { get; set; }
 
+        private ScannerFolderOptions RdBtn_DocCliente;
+        private ScannerFolderOptions RdBtn_ConfissaoDivida;
+        private ScannerFolderOptions RdBtn_Despesas;
+        private ScannerFolderOptions RdBtn_Outros;
         private string? NameFranquia { get; set; }
         private string ChoiceOptionPath { get; set; }
         WiaScanner wiaScanner = new WiaScanner();
@@ -69,10 +66,133 @@ namespace CamScan
         public Scanner()
         {
             InitializeComponent();
-            Loaded += RdBtn_DocCliente_Checked;
+            ReadXmlConfig();
+            CreateRdButtons();
             InputError.Visibility = Visibility.Hidden;
-
             Loaded += OnLoaded;
+        }
+
+        public void ReadXmlConfig()
+        {
+            SettingsFranquias();
+            var xml = CallXML();
+            if (xml == null)
+            {
+               return;
+            }
+            if (xml.ConfigDriver != null)
+            {
+                DriverType = xml.ConfigDriver.Type;
+                DriverName = xml.ConfigDriver.Name;
+                FolderConfissaodeDivida = xml.FolderConfissaoDivida;
+                FolderDocumentoCliente = xml.FolderDocumentoCliente;
+                FolderDespesas = xml.FolderDespesas;
+                FolderOutros = xml.FolderOutros;
+            }
+        }
+
+        private void CreateGridRdButtons(string folderOption)
+        {
+            Grid grid = new Grid
+            {
+                Width = 270,
+                VerticalAlignment = VerticalAlignment.Center,
+                HorizontalAlignment = WpfSystem.HorizontalAlignment.Center,
+            };
+
+            if (GridRdButtons.RowDefinitions.Count == 0)
+            {
+                GridRdButtons.RowDefinitions.Clear();
+            }
+            GridRdButtons.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
+
+            int newRow = GridRdButtons.RowDefinitions.Count - 1;
+            Grid.SetRow(grid, newRow);
+
+            switch (folderOption)
+            {
+                case "DocCliente":
+                    RdBtn_DocCliente = new ScannerFolderOptions
+                    {
+                        Name = "RdBtn_DocCliente",
+                        Text = "Documentos de Cliente",
+                        GroupName = "ScannerOptions"
+                    };
+                    RdBtn_DocCliente.Checked += RdBtn_DocCliente_Checked;
+                    grid.Children.Add(RdBtn_DocCliente);
+                    if (GridRdButtons != null)
+                    {
+                        GridRdButtons.Children.Add(grid);
+                    }
+                    break;
+
+                case "ConfissaoDivida":
+                    RdBtn_ConfissaoDivida = new ScannerFolderOptions
+                    {
+                        Name = "RdBtn_ConfissaoDivida",
+                        Text = "Confissão de Divida",
+                        GroupName = "ScannerOptions"
+                    };
+                    RdBtn_ConfissaoDivida.Checked += RdBtn_ConfissaoDivida_Checked;
+                    grid.Children.Add(RdBtn_ConfissaoDivida);
+                    if (GridRdButtons != null)
+                    {
+                        GridRdButtons.Children.Add(grid);
+                    }
+                    break;
+
+                case "Despesas":
+                    RdBtn_Despesas = new ScannerFolderOptions
+                    {
+                        Name = "RdBtn_Despesas",
+                        Text = "Despesas",
+                        GroupName = "ScannerOptions"
+                    };
+                    RdBtn_Despesas.Checked += RdBtn_Despesas_Checked;
+                    grid.Children.Add(RdBtn_Despesas);
+                    if (GridRdButtons != null)
+                    {
+                        GridRdButtons.Children.Add(grid);
+                    }
+                    break;
+
+                case "Outros":
+                    RdBtn_Outros = new ScannerFolderOptions
+                    {
+                        Name = "RdBtn_Outros",
+                        Text = "Outros",
+                        GroupName = "ScannerOptions"
+                    };
+                    RdBtn_Outros.Checked += RdBtn_Outros_Checked;
+                    grid.Children.Add(RdBtn_Outros);
+                    if (GridRdButtons != null)
+                    {
+                        GridRdButtons.Children.Add(grid);
+                    }
+                    break;
+            }
+
+        }
+
+        private void CreateRdButtons()
+        {
+            if (!string.IsNullOrEmpty(FolderDocumentoCliente))
+            {
+                CreateGridRdButtons("DocCliente");
+            }
+            if (!string.IsNullOrEmpty(FolderConfissaodeDivida))
+            {
+                CreateGridRdButtons("ConfissaoDivida");
+            }
+            if (!string.IsNullOrEmpty(FolderDespesas))
+            {
+                CreateGridRdButtons("Despesas");
+            }
+            if (!string.IsNullOrEmpty(FolderOutros))
+            {
+                CreateGridRdButtons("Outros");
+            }
+
         }
         private void SettingsFranquias()
         {
@@ -185,28 +305,24 @@ namespace CamScan
 
         public void OnLoaded(object sender, RoutedEventArgs e)
         {
-            
-            RdBtn_DocCliente.IsChecked = true;
+            if(RdBtn_DocCliente == null)
+            {
+                return;
+            }
 
+            Loaded += RdBtn_DocCliente_Checked;
+            RdBtn_DocCliente.IsChecked = true;
+            
             try
             {
-                SettingsFranquias();
-                var xml = CallXML();
-                if(xml.ConfigDriver != null)
+                if(DriverType != null && DriverName != null)
                 {
-                    
-                    driverType = xml.ConfigDriver.Type;
-                    FolderConfissaodeDivida = xml.FolderConfissaoDivida;
-                    FolderDocumentoCliente = xml.FolderDocumentoCliente;
-                    FolderDespesas = xml.FolderDespesas;
-                    FolderOutros = xml.FolderOutros;
-
                     //CARREGA CONEXÃO COM SCANNER DE PROTOCOLO WIA
-                    if (driverType == "WIA")
+                    if (DriverType == "WIA")
                     {
                         try
                         {
-                            ScannerDeviceConnectWIA(xml.ConfigDriver.Name);
+                            ScannerDeviceConnectWIA(DriverName);
                         }
                         catch (Exception ex)
                         {
@@ -214,11 +330,11 @@ namespace CamScan
                         }
                     }
                     //CARREGA CONEXÃO COM SCANNER DE PROTOCOLO TWAIN
-                    else if (driverType == "TWAIN")
+                    else if (DriverType == "TWAIN")
                     {
                         try
                         {
-                            ScannerDeviceConnectTWAIN(xml.ConfigDriver.Name);
+                            ScannerDeviceConnectTWAIN(DriverName);
                         }
                         catch (Exception ex)
                         {
@@ -318,7 +434,7 @@ namespace CamScan
                             lastRadioButton.IsChecked = true;
                         }
 
-                        if (ScannedImages.Count > 0 && RdBtn_ConfissaoDivida.IsChecked == true)
+                        if (ScannedImages.Count > 0 && RdBtn_ConfissaoDivida?.IsChecked == true)
                         {
                             Escanear.Text = "Adicionar";
                         }
@@ -478,7 +594,7 @@ namespace CamScan
         {
             
             
-            if (ScannedImages.Count > 0 && (RdBtn_DocCliente.IsChecked == true || RdBtn_Despesas.IsChecked == true || RdBtn_Outros.IsChecked == true))
+            if (ScannedImages.Count > 0 && (RdBtn_DocCliente?.IsChecked == true || RdBtn_Despesas?.IsChecked == true || RdBtn_Outros?.IsChecked == true))
             {
                 return;
             }
@@ -489,7 +605,7 @@ namespace CamScan
             }
 
             //UTILIZA SCANNER DO TIPO WIA
-            if (driverType == "WIA")
+            if (DriverType == "WIA")
             {
                 try
                 {
@@ -518,7 +634,7 @@ namespace CamScan
             }
             
             //UTILIZA SCANNER DO TIPO TWAIN
-            else if (driverType == "TWAIN")
+            else if (DriverType == "TWAIN")
             {
                 try
                 {
@@ -576,37 +692,33 @@ namespace CamScan
             }
         }
 
-
-
-
         //DISABLE BUTTONS TYPE CHECKBOX NOT CHECKED
+
+
+        private void Btns()
+        {
+
+        }
+
         private void DisableButtonsNotChecked()
         {
             Dispatcher.Invoke(() =>
             {
-                if (RdBtn_DocCliente.IsChecked == false)
+                if (RdBtn_DocCliente?.IsChecked == false)
                 {
                     RdBtn_DocCliente.Cursor = System.Windows.Input.Cursors.No;
                     Escanear.Cursor = System.Windows.Input.Cursors.No;
                     RdBtn_DocCliente.IsEnabled = false;
                     Escanear.IsEnabled = false;
                 }
-                if (RdBtn_Despesas.IsChecked == false)
+                if (RdBtn_Despesas?.IsChecked == false)
                 {
                     RdBtn_Despesas.Cursor = System.Windows.Input.Cursors.No;
                     Escanear.Cursor = System.Windows.Input.Cursors.No;
                     RdBtn_Despesas.IsEnabled = false;
                     Escanear.IsEnabled = false;
                 }
-                if (RdBtn_Outros.IsChecked == false)
-                {
-                    RdBtn_Outros.Cursor = System.Windows.Input.Cursors.No;
-                    Escanear.Cursor = System.Windows.Input.Cursors.No;
-                    RdBtn_Outros.IsEnabled = false;
-                    Escanear.IsEnabled = false;
-                    
-                }
-                if (RdBtn_ConfissaoDivida.IsChecked == false)
+                if (RdBtn_ConfissaoDivida?.IsChecked == false)
                 {
                     RdBtn_ConfissaoDivida.Cursor = System.Windows.Input.Cursors.No;
                     Escanear.Cursor = System.Windows.Input.Cursors.No;
@@ -614,15 +726,21 @@ namespace CamScan
                     Escanear.IsEnabled = false;
                     Escanear.Background = new SolidColorBrush((WpfSystem.Media.Color)WpfSystem.Media.ColorConverter.ConvertFromString("#D3D3D3"));
                 }
+                if (RdBtn_Outros?.IsChecked == false)
+                {
+                    RdBtn_Outros.Cursor = System.Windows.Input.Cursors.No;
+                    Escanear.Cursor = System.Windows.Input.Cursors.No;
+                    RdBtn_Outros.IsEnabled = false;
+                    Escanear.IsEnabled = false;
+                }
             });
-            
         }
 
         private void CursorPointerSet()
         {
             Dispatcher.Invoke(() =>
             {
-                if (RdBtn_ConfissaoDivida.IsChecked == true)
+                if (RdBtn_ConfissaoDivida?.IsChecked == true)
                 {
                     Escanear.IsEnabled = true;
                     Escanear.Cursor = System.Windows.Input.Cursors.Hand;
@@ -634,17 +752,29 @@ namespace CamScan
 
         private void EnableButtonsTypeCheckBox()
         {
-            RdBtn_DocCliente.IsEnabled = true;
-            RdBtn_DocCliente.Cursor = System.Windows.Input.Cursors.Hand;
+            if(RdBtn_DocCliente != null)
+            {
+                RdBtn_DocCliente.IsEnabled = true;
+                RdBtn_DocCliente.Cursor = System.Windows.Input.Cursors.Hand;
+            }
 
-            RdBtn_ConfissaoDivida.IsEnabled = true;
-            RdBtn_ConfissaoDivida.Cursor = System.Windows.Input.Cursors.Hand;
+            if (RdBtn_ConfissaoDivida != null)
+            {
+                RdBtn_ConfissaoDivida.IsEnabled = true;
+                RdBtn_ConfissaoDivida.Cursor = System.Windows.Input.Cursors.Hand;
+            }
 
-            RdBtn_Despesas.IsEnabled = true;
-            RdBtn_Despesas.Cursor = System.Windows.Input.Cursors.Hand;
+            if (RdBtn_Despesas != null)
+            {
+                RdBtn_Despesas.IsEnabled = true;
+                RdBtn_Despesas.Cursor = System.Windows.Input.Cursors.Hand;
+            }
 
-            RdBtn_Outros.IsEnabled = true;
-            RdBtn_Outros.Cursor = System.Windows.Input.Cursors.Hand;
+            if (RdBtn_Outros != null)
+            {
+                RdBtn_Outros.IsEnabled = true;
+                RdBtn_Outros.Cursor = System.Windows.Input.Cursors.Hand;
+            }
 
             Escanear.IsEnabled = true;
             Escanear.Cursor = System.Windows.Input.Cursors.Hand;
@@ -721,7 +851,7 @@ namespace CamScan
 
             if (ScannedImages.Count > 0)
             {
-                if (RdBtn_DocCliente.IsChecked == true)
+                if (RdBtn_DocCliente?.IsChecked == true)
                 {
                     if (FolderDocumentoCliente == null || FolderDocumentoCliente == "")
                     {
@@ -750,7 +880,7 @@ namespace CamScan
                         WpfSystem.MessageBox.Show($"Erro ao salvar a imagem de cliente: {ex.Message}", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 }
-                else if(RdBtn_ConfissaoDivida.IsChecked == true)
+                else if(RdBtn_ConfissaoDivida?.IsChecked == true)
                 {
                     if (FolderConfissaodeDivida == null || FolderConfissaodeDivida == "")
                     {
@@ -778,7 +908,7 @@ namespace CamScan
                         WpfSystem.MessageBox.Show($"Erro ao salvar a imagem da Confissão: {ex.Message}", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 }
-                else if(RdBtn_Despesas.IsChecked == true)
+                else if(RdBtn_Despesas?.IsChecked == true)
                 {
                     if(FolderDespesas == null || FolderDespesas == "")
                     {
@@ -811,7 +941,7 @@ namespace CamScan
                         WpfSystem.MessageBox.Show($"Erro ao salvar a imagem da Despesas: {ex.Message}", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 }
-                else if (RdBtn_Outros.IsChecked == true)
+                else if (RdBtn_Outros?.IsChecked == true)
                 {
                     if (FolderOutros == null || FolderOutros == "")
                     {

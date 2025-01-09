@@ -41,40 +41,16 @@
                     </Grid.RowDefinitions>
                     <Grid Grid.Row="0">
                         <router:Navigator Style="{StaticResource NavigatorImage}"
-               ImageSource="/Images/Settings/backButton.png"
-               NavUri="/Pages/Landing.xaml" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="10,7,0,0" Click="Navigator_Click" 
-               />
-
+                           ImageSource="/Images/Settings/backButton.png"
+                           NavUri="/Pages/Landing.xaml" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="10,7,0,0" Click="Navigator_Click" 
+                        />
                     </Grid>
                     <Grid Grid.Row="1">
                         <Label Content="Qual o tipo de arquivo ?" HorizontalAlignment="Center" 
                         VerticalAlignment="Center" VerticalContentAlignment="Center" 
                          FontFamily="Arial" FontSize="20" FontWeight="Bold" Foreground="#FF534C4C"/>
                     </Grid>
-                    <Grid Grid.Row="2">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
-                        <Grid Grid.Row="0" HorizontalAlignment="Center" Width="270"
-                       VerticalAlignment="Center">
-                            <router:ScannerFolderOptions x:Name="RdBtn_DocCliente"  Text="Documentos de Cliente" GroupName="ScannerOptions" Checked="RdBtn_DocCliente_Checked"/>
-                        </Grid>
-                        <Grid  Grid.Row="1" HorizontalAlignment="Center" Width="270"
-                       VerticalAlignment="Center">
-                            <router:ScannerFolderOptions x:Name="RdBtn_ConfissaoDivida" Text="Confissão de Divida" 
-                                                  GroupName="ScannerOptions" Checked="RdBtn_ConfissaoDivida_Checked"/>
-                        </Grid>
-                        <Grid  Grid.Row="2" HorizontalAlignment="Center" Width="270"
-                       VerticalAlignment="Center">
-                            <router:ScannerFolderOptions x:Name="RdBtn_Despesas" Text="Despesas" GroupName="ScannerOptions" Checked="RdBtn_Despesas_Checked"/>
-                        </Grid>
-                        <Grid Grid.Row="3" HorizontalAlignment="Center" Width="270"
-                       VerticalAlignment="Center">
-                            <router:ScannerFolderOptions x:Name="RdBtn_Outros" Text="Outros" GroupName="ScannerOptions" Checked="RdBtn_Outros_Checked"/>
-                        </Grid>
+                    <Grid x:Name="GridRdButtons" Grid.Row="2" VerticalAlignment="Top">
                     </Grid>
                 </Grid>
                 <Grid Grid.Row="1">
